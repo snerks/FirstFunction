@@ -22,9 +22,9 @@ namespace Company.Function
         // [return: Table("outTable", Connection = "AzureWebJobsStorage")]
         [return: Table("outTable")]
         public static Person Run(
-            // [QueueTrigger("myqueue-items", Connection = "AzureWebJobsStorage")] 
+            // [QueueTrigger("myqueue-items", Connection = "AzureWebJobsStorage")]
             [QueueTrigger("myqueue-items")]
-            JObject order,
+            Order order,
             ILogger log)
         {
             try
@@ -33,8 +33,10 @@ namespace Company.Function
                 {
                     PartitionKey = "Orders",
                     RowKey = Guid.NewGuid().ToString(),
-                    Name = order["Name"].ToString(),
-                    MobileNumber = order["MobileNumber"].ToString()
+                    // Name = order["Name"].ToString(),
+                    // MobileNumber = order["MobileNumber"].ToString()
+                    Name = order.Name,
+                    MobileNumber = order.MobileNumber
                 };
 
             }
@@ -44,6 +46,12 @@ namespace Company.Function
                 throw;
             }
         }
+    }
+
+    public class Order
+    {
+        public string Name { get; set; }
+        public string MobileNumber { get; set; }
     }
 
     public class Person
